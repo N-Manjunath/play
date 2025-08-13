@@ -9,7 +9,7 @@ import { setLocationGranted, setManualLocation, resetLocation, setLocationDenied
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
-import Dashboard from './pages/Dashboard.jsx';
+import Home from './pages/Home.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import LocationPermission from './pages/LocationPermission.jsx';
 
@@ -67,7 +67,7 @@ export default function App() {
               {locationState.permission === 'unknown' ? (
                 <Navigate to="/location" replace />
               ) : (
-                <Dashboard />
+                <Home />
               )}
             </ProtectedRoute>
           }
