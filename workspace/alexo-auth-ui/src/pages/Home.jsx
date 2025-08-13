@@ -70,6 +70,9 @@ function ProductCard({ item }) {
   );
 }
 
+import categoriesData from '../data/categories';
+import sections from '../data/sections';
+
 export default function Home() {
   const navigate = useNavigate();
   const locationState = useAppSelector((s) => s.location);
@@ -81,50 +84,9 @@ export default function Home() {
       ? locationState.manualLocationLabel
       : 'Set location';
 
-  const categories = [
-    { emoji: '📱', label: 'Mobiles' },
-    { emoji: '🏠', label: 'Property for Sale' },
-    { emoji: '🚗', label: 'Vehicles' },
-    { emoji: '🏍️', label: 'Bikes' },
-    { emoji: '🏭', label: 'Business Industrial' },
-    { emoji: '🛋️', label: 'Home & Furniture' },
-  ];
+  const categories = categoriesData;
 
-  const items = [
-    {
-      id: 'mac14',
-      title: 'Macbook 14',
-      price: 450000,
-      condition: 'new',
-      rating: '10/10',
-      location: 'Gulberg Phase 4, Lahore',
-      date: '22 Sep',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'iphone14pm',
-      title: 'Iphone 14 Pro Max',
-      price: 600000,
-      condition: 'used',
-      rating: '08/10',
-      location: 'Gulberg Phase 4, Lahore',
-      date: '22 Sep',
-      imageUrl:
-        'https://images.unsplash.com/photo-1661347330538-6386bc0b7deb?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'watch',
-      title: 'Smart Watch Series 8',
-      price: 35000,
-      condition: 'new',
-      rating: '09/10',
-      location: 'DHA, Lahore',
-      date: '20 Sep',
-      imageUrl:
-        'https://images.unsplash.com/photo-1518442072089-1e3b3aee9d24?q=80&w=1200&auto=format&fit=crop',
-    },
-  ];
+  const productSections = sections;
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
@@ -139,9 +101,9 @@ export default function Home() {
           {/* Category + actions */}
           <div className="mt-3 flex items-center gap-2">
             <select className="text-sm border rounded-md px-2 py-2 flex-1">
-              <option>Accessories</option>
-              <option>Mobiles</option>
-              <option>Vehicles</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>{c.label}</option>
+              ))}
             </select>
             <button className="w-10 h-10 grid place-items-center border rounded-md text-slate-600">
               <Icon name="search" />
@@ -183,31 +145,20 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Featured */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-semibold">Featured <span className="text-slate-500 font-normal">10+</span></div>
-            <button className="text-xs text-indigo-600">See more</button>
+        {/* Sections */}
+        {productSections.map((section) => (
+          <div key={section.id}>
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-semibold">{section.title} <span className="text-slate-500 font-normal">{section.countLabel}</span></div>
+              <button className="text-xs text-indigo-600">See more</button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto snap-x pb-1">
+              {section.items.map((it) => (
+                <ProductCard key={`${section.id}-${it.id}`} item={it} />
+              ))}
+            </div>
           </div>
-          <div className="flex gap-3 overflow-x-auto snap-x pb-1">
-            {items.map((it) => (
-              <ProductCard key={it.id} item={it} />
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-semibold">Mobile <span className="text-slate-500 font-normal">100+</span></div>
-            <button className="text-xs text-indigo-600">See more</button>
-          </div>
-          <div className="flex gap-3 overflow-x-auto snap-x pb-1">
-            {items.map((it) => (
-              <ProductCard key={`m-${it.id}`} item={it} />
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Bottom nav */}
