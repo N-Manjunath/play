@@ -1,4 +1,3 @@
-import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -6,11 +5,11 @@ import { auth } from '../firebase';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setMessage(null);
     setError(null);
@@ -18,8 +17,8 @@ export default function ForgotPassword() {
     try {
       await sendPasswordResetEmail(auth, email);
       setMessage('Password reset email sent.');
-    } catch (err: any) {
-      setError(err.message ?? 'Failed to send reset email');
+    } catch (err) {
+      setError(err.message || 'Failed to send reset email');
     } finally {
       setLoading(false);
     }

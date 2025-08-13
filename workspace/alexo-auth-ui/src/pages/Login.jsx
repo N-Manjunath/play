@@ -1,33 +1,31 @@
-import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useAuth } from '../context/AuthContext';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../firebase';
+import { useAppDispatch } from '../store';
+import { setUser, setAuthError } from '../store/authSlice';
 
-export default function Signup() {
+export default function Login() {
   const navigate = useNavigate();
-  const { signInWithGoogle } = useAuth();
+  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const u = cred.user;
+      dispatch(setUser({ uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL }));
       navigate('/');
-    } catch (err: any) {
-      setError(err.message ?? 'Failed to sign up');
+    } catch (err) {
+      setError(err.message || 'Failed to sign in');
+      dispatch(setAuthError(err.message));
     } finally {
       setLoading(false);
     }
@@ -37,10 +35,13 @@ export default function Signup() {
     setError(null);
     setLoading(true);
     try {
-      await signInWithGoogle();
+      const cred = await signInWithPopup(auth, googleProvider);
+      const u = cred.user;
+      dispatch(setUser({ uid: u.uid, email: u.email, displayName: u.displayName, photoURL: u.photoURL }));
       navigate('/');
-    } catch (err: any) {
-      setError(err.message ?? 'Google sign-in failed');
+    } catch (err) {
+      setError(err.message || 'Google sign-in failed');
+      dispatch(setAuthError(err.message));
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ export default function Signup() {
         <div className="flex items-center justify-center mb-6">
           <span className="text-3xl font-bold text-indigo-600">Alexo</span>
         </div>
-        <h2 className="text-xl font-semibold mb-2">Signup</h2>
+        <h2 className="text-xl font-semibold mb-2">Login</h2>
         <p className="text-slate-500 text-sm mb-6">Enter your credentials to access your account</p>
         {error && (
           <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">{error}</div>
@@ -80,23 +81,15 @@ export default function Signup() {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Re-enter your password"
-              required
-            />
+          <div className="text-right text-sm">
+            <Link to="/forgot" className="text-indigo-600 hover:underline">Forgot Password?</Link>
           </div>
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-md transition disabled:opacity-60"
           >
-            {loading ? 'Creating account...' : 'Get Started'}
+            {loading ? 'Signing in...' : 'Get Started'}
           </button>
         </form>
         <div className="flex items-center gap-3 my-6">
@@ -115,8 +108,8 @@ export default function Signup() {
           If you continue, you are accepting Alexo Terms and Conditions and Privacy Policy
         </p>
         <p className="mt-4 text-sm text-center text-slate-600">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 hover:underline">Login</Link>
+          Don’t have an account?{' '}
+          <Link to="/signup" className="text-indigo-600 hover:underline">Create one</Link>
         </p>
       </div>
     </div>
