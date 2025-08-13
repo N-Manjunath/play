@@ -40,12 +40,13 @@ const path = window.location.pathname;
 onAuthStateChanged(auth, (user) => {
   const isAuthPage = path.endsWith('/index.html') || path.endsWith('/signup.html') || path.endsWith('/');
   if (user && isAuthPage) {
-    go('/dashboard.html');
+    go('/home.html');
   }
-  if (!user && path.endsWith('/dashboard.html')) {
+  const isProtected = path.endsWith('/dashboard.html') || path.endsWith('/home.html');
+  if (!user && isProtected) {
     go('/index.html');
   }
-  if (user && path.endsWith('/dashboard.html')) {
+  if (user && (path.endsWith('/dashboard.html') || path.endsWith('/home.html'))) {
     const emailEl = document.getElementById('user-email');
     if (emailEl) emailEl.textContent = `Signed in as ${user.email ?? 'Unknown user'}`;
   }
@@ -60,7 +61,7 @@ if (loginForm) {
     const password = document.getElementById('login-password').value;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      go('/dashboard.html');
+      go('/home.html');
     } catch (err) {
       alert(err.message);
     }
@@ -71,7 +72,7 @@ if (loginForm) {
     googleBtn.addEventListener('click', async () => {
       try {
         await signInWithPopup(auth, provider);
-        go('/dashboard.html');
+        go('/home.html');
       } catch (err) { alert(err.message); }
     });
   }
@@ -91,7 +92,7 @@ if (signupForm) {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      go('/dashboard.html');
+      go('/home.html');
     } catch (err) { alert(err.message); }
   });
 
@@ -100,7 +101,7 @@ if (signupForm) {
     googleBtn.addEventListener('click', async () => {
       try {
         await signInWithPopup(auth, provider);
-        go('/dashboard.html');
+        go('/home.html');
       } catch (err) { alert(err.message); }
     });
   }
