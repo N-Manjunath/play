@@ -127,7 +127,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-24">
+    <div className="min-h-screen bg-slate-50">
       {/* Top bar */}
       <div className="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-200">
         <div className="mx-auto max-w-md px-4 py-3">
@@ -210,22 +210,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Bottom nav */}
-      <div className="fixed bottom-0 inset-x-0 z-30">
-        <div className="mx-auto max-w-md px-4 pb-3">
-          <div className="relative bg-white border border-slate-200 rounded-full h-16 flex items-center justify-around shadow-sm">
-            <button className="text-slate-700"><Icon name="home" className="w-6 h-6" /></button>
-            <button className="text-slate-700"><Icon name="chat" className="w-6 h-6" /></button>
-            <div className="absolute left-1/2 -translate-x-1/2 -top-4">
-              <button className="w-12 h-12 rounded-full bg-indigo-600 text-white grid place-items-center shadow-lg">
-                <Icon name="plus" className="w-7 h-7" />
-              </button>
-            </div>
-            <button className="text-slate-700"><Icon name="inbox" className="w-6 h-6" /></button>
-            <button className="text-slate-700"><Icon name="user" className="w-6 h-6" /></button>
-          </div>
-        </div>
-      </div>
+      {/* Bottom nav moved to global Footer component */}
     </div>
   );
 }

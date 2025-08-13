@@ -12,10 +12,12 @@ import ForgotPassword from './pages/ForgotPassword.jsx';
 import Home from './pages/Home.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import LocationPermission from './pages/LocationPermission.jsx';
+import Footer from './components/Footer.jsx';
 
 export default function App() {
   const dispatch = useAppDispatch();
   const locationState = useAppSelector((state) => state.location);
+  const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -59,25 +61,28 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              {locationState.permission === 'unknown' ? (
-                <Navigate to="/location" replace />
-              ) : (
-                <Home />
-              )}
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/location" element={<ProtectedRoute><LocationPermission /></ProtectedRoute>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      <div className="min-h-screen pb-24">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                {locationState.permission === 'unknown' ? (
+                  <Navigate to="/location" replace />
+                ) : (
+                  <Home />
+                )}
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/location" element={<ProtectedRoute><LocationPermission /></ProtectedRoute>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot" element={<ForgotPassword />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+        {user && <Footer />}
+      </div>
     </BrowserRouter>
   );
 }
