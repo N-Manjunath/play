@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../store';
 
@@ -25,12 +26,12 @@ function Icon({ name, className = 'w-5 h-5' }) {
   );
 }
 
-function CategoryPill({ emoji, label }) {
+function CategoryPill({ emoji, label, active, onClick }) {
   return (
-    <div className="min-w-[64px] flex flex-col items-center gap-1">
-      <div className="w-12 h-12 rounded-full bg-slate-100 grid place-items-center text-lg">{emoji}</div>
-      <span className="text-[11px] text-slate-600 text-center leading-tight">{label}</span>
-    </div>
+    <button onClick={onClick} className="min-w-[64px] flex flex-col items-center gap-1 focus:outline-none">
+      <div className={`w-12 h-12 rounded-full grid place-items-center text-lg ${active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}`}>{emoji}</div>
+      <span className={`text-[11px] text-center leading-tight ${active ? 'text-indigo-600 font-medium' : 'text-slate-600'}`}>{label}</span>
+    </button>
   );
 }
 
@@ -85,8 +86,15 @@ export default function Home() {
       : 'Set location';
 
   const categories = categoriesData;
+  const [selectedCategoryId, setSelectedCategoryId] = useState('all');
 
   const productSections = sections;
+
+  const filteredSections = useMemo(() => {
+    return productSections.filter(
+      (s) => selectedCategoryId === 'all' || s.categoryId == null || s.categoryId === selectedCategoryId
+    );
+  }, [productSections, selectedCategoryId]);
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
@@ -100,7 +108,7 @@ export default function Home() {
 
           {/* Category + actions */}
           <div className="mt-3 flex items-center gap-2">
-            <select className="text-sm border rounded-md px-2 py-2 flex-1">
+            <select value={selectedCategoryId} onChange={(e) => setSelectedCategoryId(e.target.value)} className="text-sm border rounded-md px-2 py-2 flex-1">
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.label}</option>
               ))}
@@ -135,18 +143,24 @@ export default function Home() {
         {/* Browse categories */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-semibold">Browse Categories <span className="text-slate-500 font-normal">15+</span></div>
+            <div className="text-sm font-semibold">Browse Categories <span className="text-slate-500 font-normal">{categories.length}+</span></div>
             <button className="text-xs text-indigo-600">See more</button>
           </div>
           <div className="flex gap-3 overflow-x-auto snap-x">
             {categories.map((c) => (
-              <CategoryPill key={c.label} emoji={c.emoji} label={c.label} />
+              <CategoryPill
+                key={c.id}
+                emoji={c.emoji}
+                label={c.label}
+                active={selectedCategoryId === c.id}
+                onClick={() => setSelectedCategoryId(c.id)}
+              />
             ))}
           </div>
         </div>
 
         {/* Sections */}
-        {productSections.map((section) => (
+        {filteredSections.map((section) => (
           <div key={section.id}>
             <div className="flex items-center justify-between mb-2">
               <div className="text-sm font-semibold">{section.title} <span className="text-slate-500 font-normal">{section.countLabel}</span></div>
