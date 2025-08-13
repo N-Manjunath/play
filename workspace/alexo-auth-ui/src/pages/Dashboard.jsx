@@ -4,10 +4,19 @@ import { signOut } from 'firebase/auth';
 
 export default function Dashboard() {
   const user = useAppSelector((state) => state.auth.user);
+  const locationState = useAppSelector((state) => state.location);
+
+  const locationLabel =
+    locationState.permission === 'granted' && locationState.coords
+      ? `${locationState.coords.latitude.toFixed(4)}, ${locationState.coords.longitude.toFixed(4)}`
+      : locationState.permission === 'manual'
+      ? locationState.manualLocationLabel
+      : 'Unknown';
 
   return (
     <div className="min-h-screen grid place-items-center bg-slate-50 p-4">
       <div className="w-full max-w-md bg-white shadow rounded-2xl p-8 text-center">
+        <div className="mb-4 text-sm text-slate-600">Location: <span className="font-medium">{locationLabel}</span></div>
         <h2 className="text-2xl font-semibold mb-2">Welcome</h2>
         <p className="text-slate-600 mb-6">{user?.email}</p>
         <button
