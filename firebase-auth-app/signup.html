@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alexo — Signup</title>
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <div class="brand">
+          <img src="https://dummyimage.com/80x28/000/fff&text=Alexo" alt="Alexo" />
+          <small>Sell or Buy in One Marketplace</small>
+        </div>
+        <h1>Signup</h1>
+        <p class="subtitle">Enter your credentials to access your account</p>
+
+        <form id="signup-form">
+          <label>Email address</label>
+          <input id="signup-email" type="email" placeholder="Enter your email" required />
+
+          <label>Password</label>
+          <input id="signup-password" type="password" placeholder="Enter your password" required />
+
+          <label>Confirm Password</label>
+          <input id="signup-password2" type="password" placeholder="Enter your password" required />
+
+          <button id="signup-button" type="submit" class="primary">Get Started</button>
+        </form>
+        <div class="or">OR</div>
+        <button id="google-signup" class="google">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" />
+          Sign in with Google
+        </button>
+        <p class="footer-text">Already have an account? <a href="/index.html">Login</a></p>
+        <p class="tos">If you continue, you are accepting Alexo Terms and Conditions and Privacy Policy</p>
+      </div>
+    </div>
+
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>
