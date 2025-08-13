@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-@import "tailwindcss";
-=======
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
->>>>>>> cursor/develop-react-sign-in-and-sign-up-ui-with-firebase-e613
 
 html, body, #root {
   height: 100%;
